@@ -180,6 +180,19 @@ app.get('/', (req, res) => {
   });
 });
 
+// Additional discovery endpoints for GHL compatibility
+app.get('/mcp', (req, res) => {
+  res.redirect('/tools');
+});
+
+app.get('/v1/tools', (req, res) => {
+  res.redirect('/tools');
+});
+
+app.get('/api/tools', (req, res) => {
+  res.redirect('/tools');
+});
+
 app.listen(PORT, () => {
   console.log(`[MCP] Server running on port ${PORT}`);
   console.log(`[MCP] Modal API: ${MODAL_API_URL}`);
