@@ -38,6 +38,32 @@ app.get('/health', (req, res) => {
   });
 });
 
+// MCP protocol discovery endpoint - what GHL might be calling
+app.get('/.well-known/mcp', (req, res) => {
+  res.json({
+    name: 'booked-mcp-server',
+    version: '3.0.0-fresh',
+    protocol: 'MCP over HTTP',
+    description: 'MCP server for analyzing websites and generating AI voice agent personas',
+    tools: [
+      {
+        name: 'research_website',
+        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        input_schema: {
+          type: 'object',
+          properties: {
+            website: {
+              type: 'string',
+              description: 'The website URL to research (e.g., "staples.com")'
+            }
+          },
+          required: ['website']
+        }
+      }
+    ]
+  });
+});
+
 // Tool discovery endpoint - MCP compliant
 app.get('/tools', (req, res) => {
   res.json({
