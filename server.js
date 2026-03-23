@@ -148,12 +148,29 @@ app.post('/tools/invoke', async (req, res) => {
   }
 });
 
-// Root endpoint
+// Root endpoint - MCP server info + tool discovery
 app.get('/', (req, res) => {
   res.json({
     name: 'booked-mcp-server',
     version: '3.0.0-fresh',
     protocol: 'MCP over HTTP',
+    description: 'MCP server for analyzing websites and generating AI voice agent personas',
+    tools: [
+      {
+        name: 'research_website',
+        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        input_schema: {
+          type: 'object',
+          properties: {
+            website: {
+              type: 'string',
+              description: 'The website URL to research (e.g., "staples.com")'
+            }
+          },
+          required: ['website']
+        }
+      }
+    ],
     endpoints: {
       health: 'GET /health',
       tools: 'GET /tools',
