@@ -44,20 +44,20 @@ app.get('/.well-known/mcp', (req, res) => {
     name: 'booked-mcp-server',
     version: '3.0.0-fresh',
     protocol: 'MCP over HTTP',
-    description: 'MCP server for analyzing websites and generating AI voice agent personas',
+    description: 'MCP server for analyzing urls and generating AI voice agent personas',
     tools: [
       {
-        name: 'research_website',
-        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        name: 'analyze_website',
+        description: 'Research a company url during a call to generate a customized AI voice agent persona',
         input_schema: {
           type: 'object',
           properties: {
-            website: {
+            url: {
               type: 'string',
-              description: 'The website URL to research (e.g., "staples.com")'
+              description: 'The url URL to research (e.g., "staples.com")'
             }
           },
-          required: ['website']
+          required: ['url']
         }
       }
     ]
@@ -69,17 +69,17 @@ app.get('/tools', (req, res) => {
   res.json({
     tools: [
       {
-        name: 'research_website',
-        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        name: 'analyze_website',
+        description: 'Research a company url during a call to generate a customized AI voice agent persona',
         input_schema: {
           type: 'object',
           properties: {
-            website: {
+            url: {
               type: 'string',
-              description: 'The website URL to research (e.g., "staples.com")'
+              description: 'The url URL to research (e.g., "staples.com")'
             }
           },
-          required: ['website']
+          required: ['url']
         }
       }
     ]
@@ -87,23 +87,23 @@ app.get('/tools', (req, res) => {
 });
 
 // Tool execution endpoint
-app.post('/tools/research_website', async (req, res) => {
+app.post('/tools/analyze_website', async (req, res) => {
   try {
-    const { website } = req.body;
+    const { url } = req.body;
 
-    if (!website) {
+    if (!url) {
       return res.status(400).json({
         success: false,
-        error: 'Missing website parameter'
+        error: 'Missing url parameter'
       });
     }
 
-    console.log(`[MCP] Researching: ${website}`);
+    console.log(`[MCP] Researching: ${url}`);
 
     const response = await fetch(`${MODAL_API_URL}/analyze`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ url: website }),
+      body: JSON.stringify({ url: url }),
     });
 
     const result = await response.json();
@@ -132,20 +132,20 @@ app.post('/tools/invoke', async (req, res) => {
   try {
     const { name, arguments: args } = req.body;
 
-    if (name === 'research_website') {
-      const website = args?.website;
+    if (name === 'analyze_website') {
+      const url = args?.url;
 
-      if (!website) {
+      if (!url) {
         return res.status(400).json({
           success: false,
-          error: 'Missing website parameter'
+          error: 'Missing url parameter'
         });
       }
 
       const response = await fetch(`${MODAL_API_URL}/analyze`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url: website }),
+        body: JSON.stringify({ url: url }),
       });
 
       const result = await response.json();
@@ -180,27 +180,27 @@ app.get('/', (req, res) => {
     name: 'booked-mcp-server',
     version: '3.0.0-fresh',
     protocol: 'MCP over HTTP',
-    description: 'MCP server for analyzing websites and generating AI voice agent personas',
+    description: 'MCP server for analyzing urls and generating AI voice agent personas',
     tools: [
       {
-        name: 'research_website',
-        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        name: 'analyze_website',
+        description: 'Research a company url during a call to generate a customized AI voice agent persona',
         input_schema: {
           type: 'object',
           properties: {
-            website: {
+            url: {
               type: 'string',
-              description: 'The website URL to research (e.g., "staples.com")'
+              description: 'The url URL to research (e.g., "staples.com")'
             }
           },
-          required: ['website']
+          required: ['url']
         }
       }
     ],
     endpoints: {
       health: 'GET /health',
       tools: 'GET /tools',
-      research_website: 'POST /tools/research_website',
+      analyze_website: 'POST /tools/analyze_website',
       invoke: 'POST /tools/invoke'
     }
   });
@@ -216,20 +216,20 @@ app.get('/v1', (req, res) => {
     name: 'booked-mcp-server',
     version: '3.0.0-fresh',
     protocol: 'MCP over HTTP',
-    description: 'MCP server for analyzing websites and generating AI voice agent personas',
+    description: 'MCP server for analyzing urls and generating AI voice agent personas',
     tools: [
       {
-        name: 'research_website',
-        description: 'Research a company website during a call to generate a customized AI voice agent persona',
+        name: 'analyze_website',
+        description: 'Research a company url during a call to generate a customized AI voice agent persona',
         input_schema: {
           type: 'object',
           properties: {
-            website: {
+            url: {
               type: 'string',
-              description: 'The website URL to research (e.g., "staples.com")'
+              description: 'The url URL to research (e.g., "staples.com")'
             }
           },
-          required: ['website']
+          required: ['url']
         }
       }
     ]
