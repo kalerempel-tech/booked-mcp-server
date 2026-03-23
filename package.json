@@ -1,0 +1,22 @@
+{
+  "name": "booked-demo-mcp-server",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "MCP server for analyzing websites - calls Modal API for analysis",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node server.js",
+    "start:http": "node http-server.js",
+    "start:fresh": "node server.js",
+    "dev": "node --watch src/index.js",
+    "dev:http": "node --watch http-server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "express": "^4.18.2",
+    "cors": "^2.8.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
