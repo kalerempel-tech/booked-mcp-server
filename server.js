@@ -206,6 +206,144 @@ app.get('/', (req, res) => {
   });
 });
 
+// JSON-RPC 2.0 MCP protocol endpoint
+app.post('/', async (req, res) => {
+  try {
+    const { jsonrpc, id, method, params } = req.body;
+
+    // Handle tools/list - MCP tool discovery
+    if (method === 'tools/list') {
+      return res.json({
+        jsonrpc: '2.0',
+        id: id,
+        result: {
+          tools: [
+            {
+              name: 'analyze_website',
+              description: 'Research a company url during a call to generate a customized AI voice agent persona',
+              inputSchema: {
+                type: 'object',
+                properties: {
+                  url: {
+                    type: 'string',
+                    description: 'The url URL to research (e.g., "staples.com")'
+                  }
+                },
+                required: ['url']
+              }
+            }
+          ]
+        }
+      });
+    }
+
+    // Handle tools/call - MCP tool execution
+    if (method === 'tools/call') {
+      const toolName = params?.name;
+      const arguments = params?.arguments || params?.args;
+
+      if (toolName === 'analyze_website') {
+        const url = arguments?.url;
+
+        if (!url) {
+          return res.json({
+            jsonrpc: '2.0',
+            id: id,
+            error: {
+              code: -32602,
+              message: 'Invalid params: missing url parameter'
+            }
+          });
+        }
+
+        const response = await fetch(`${MODAL_API_URL}/analyze`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ url: url }),
+        });
+
+        const result = await response.json();
+
+        return res.json({
+          jsonrpc: '2.0',
+          id: id,
+          result: {
+            content: [
+              {
+                type: 'text',
+                text: JSON.stringify({
+                  company: result.data.persona.companyName,
+                  persona: result.data.persona.systemInstruction,
+                  greeting: result.data.persona.initialMessage,
+                  brandColor: result.data.persona.brandColor
+                })
+              }
+            ]
+          }
+        });
+      }
+
+      return res.json({
+        jsonrpc: '2.0',
+        id: id,
+        error: {
+          code: -32601,
+          message: `Method not found: ${toolName}`
+        }
+      });
+    }
+
+    // Handle initialize - MCP handshake
+    if (method === 'initialize') {
+      return res.json({
+        jsonrpc: '2.0',
+        id: id,
+        result: {
+          protocolVersion: '2024-11-05',
+          capabilities: {
+            tools: {}
+          },
+          serverInfo: {
+            name: 'booked-mcp-server',
+            version: '3.0.0-fresh'
+          }
+        }
+      });
+    }
+
+    // Handle ping
+    if (method === 'ping') {
+      return res.json({
+        jsonrpc: '2.0',
+        id: id,
+        result: {}
+      });
+    }
+
+    // Unknown method
+    return res.json({
+      jsonrpc: '2.0',
+      id: id,
+      error: {
+        code: -32601,
+        message: `Method not found: ${method}`
+      }
+    });
+
+  } catch (error) {
+    console.error('[MCP] JSON-RPC Error:', error);
+    res.json({
+      jsonrpc: '2.0',
+      id: req.body?.id || null,
+      error: {
+        code: -32603,
+        message: 'Internal error',
+        data: error.message
+      }
+    });
+  }
+});
+
 // Additional discovery endpoints for GHL compatibility
 app.get('/mcp', (req, res) => {
   res.redirect('/tools');
