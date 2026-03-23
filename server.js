@@ -193,7 +193,7 @@ app.get('/api/tools', (req, res) => {
   res.redirect('/tools');
 });
 
-app.listen(PORT, () => {
-  console.log(`[MCP] Server running on port ${PORT}`);
+app.listen(process.env.PORT || 3001, () => {
+  console.log(`[MCP] Server running on port ${process.env.PORT || 3001}`);
   console.log(`[MCP] Modal API: ${MODAL_API_URL}`);
 });
