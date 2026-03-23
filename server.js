@@ -385,4 +385,5 @@ app.get('/api/tools', (req, res) => {
 app.listen(process.env.PORT || 3001, () => {
   console.log(`[MCP] Server running on port ${process.env.PORT || 3001}`);
   console.log(`[MCP] Modal API: ${MODAL_API_URL}`);
+  console.log(`[MCP] JSON-RPC endpoint enabled`);
 });
