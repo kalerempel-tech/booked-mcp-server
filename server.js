@@ -240,10 +240,10 @@ app.post('/', async (req, res) => {
     // Handle tools/call - MCP tool execution
     if (method === 'tools/call') {
       const toolName = params?.name;
-      const arguments = params?.arguments || params?.args;
+      const args = params?.arguments || params?.args;
 
       if (toolName === 'analyze_website') {
-        const url = arguments?.url;
+        const url = args?.url;
 
         if (!url) {
           return res.json({
